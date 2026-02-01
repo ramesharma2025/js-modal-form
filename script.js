@@ -34,14 +34,44 @@ closeButton.addEventListener("click", function () {
 
 submitButton.addEventListener("click", function (event) {
   event.preventDefault();
-  const username = userName.value;
-  const password = Password.value;
-  console.log(username, password, "clciked");
+
+  // console.log(username, password, "clciked");
 
   formValidate();
 });
 
+const userError = document.getElementById("userError");
+const passError = document.getElementById("passError");
+
 function formValidate() {
+  const username = userName.value;
+  const password = Password.value;
   let isValid = true;
+  // console.log(username, "validate");
   // username validation
+  // if (username == "" || "") {
+  //   userError.textContent = "Username Can not be empty";
+  //   isValid = false;
+  // } else if (!username.includes("@")) {
+  //   userError.textContent = "Username must contain @";
+  //   isValid = false;
+  // } else if (username.length < 5) {
+  //   userError.textContent = "Length must be greater than 5";
+  //   isValid = false;
+  // } else {
+  //   userError.textContent = "";
+  // }
+
+  const regex = "/ ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/";
+  // const regex = /(?=.*[A-Za-z])/;
+  console.log(typeof regex, "regex");
+  console.log(typeof password, "pass");
+  if (!regex.test(password)) {
+    console.log("invalid");
+  } else {
+    console.log("valid");
+  }
+
+  localStorage.setItem("usr", username);
+  localStorage.setItem("pwd", password);
 }

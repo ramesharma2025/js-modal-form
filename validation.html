@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ade358;
+      }
+
+      .container {
+        width: 300px;
+        background-color: #0cd22a;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        text-align: center;
+      }
+
+      .container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      #pw-con {
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #555;
+        word-break: break-all;
+        height: 24px;
+        background: #a5a4a4;
+        color: #fff;
+      }
+
+      #err-msg {
+        font-size: 16px;
+        font-weight: bold;
+        height: 50px;
+        background: #a5a4a4;
+        height: 50px;
+      }
+
+      #err-msg:contains("Valid") {
+        color: rgb(107, 170, 107);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h1 style="color: #fff">Form Validation with Regex</h1>
+      </div>
+      <input type="input" id="password" />
+      <p id="pw-con"></p>
+      <p id="err-msg"></p>
+    </div>
+
+    <script>
+      // Dom Manipulation
+      const password = document.getElementById("password");
+      const errMessage = document.getElementById("err-msg");
+      const passwordContent = document.getElementById("pw-con");
+
+      //   Eventlistener
+      password.addEventListener("input", function () {
+        passwordContent.textContent = password.value;
+
+        // Form Validation
+        // const regex = /(?=.*\d)(?=.*@)(?=.*[A-Za-z]).{8,}/;
+        // const regex = /@/;
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*@).{8,}$/;
+
+        if (regex.test(password.value)) {
+          errMessage.textContent = "Valid";
+          errMessage.style.color = "green";
+        } else {
+          errMessage.textContent = "Invalid";
+          errMessage.style.color = "red";
+        }
+      });
+    </script>
+  </body>
+</html>
