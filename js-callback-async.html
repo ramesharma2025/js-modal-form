@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Async JS Demo</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin: 30px;
+      }
+      button {
+        padding: 8px 15px;
+        margin: 5px;
+      }
+      #output {
+        margin-top: 20px;
+        white-space: pre-line;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Async JS Demo: Callbacks, Promises, Async/Await</h2>
+
+    <button id="callbackBtn">Fetch with Callback</button>
+    <button id="promiseBtn">Fetch with Promise</button>
+    <button id="asyncBtn">Fetch with Async/Await</button>
+
+    <div id="output"></div>
+
+    <script>
+      const output = document.getElementById("output");
+
+      // ===== Simulated API Call =====
+      function fakeApiCall(data, delay, callback) {
+        setTimeout(() => {
+          callback(`Data received: ${data}`);
+        }, delay);
+      }
+
+      // ===== Callback Example =====
+      const callbackBtn = document.getElementById("callbackBtn");
+      callbackBtn.addEventListener("click", () => {
+        output.textContent = "Callback started...\n";
+        fakeApiCall("Callback Data", 1000, (result) => {
+          output.textContent += result;
+        });
+      });
+
+      // ===== Promise Example =====
+      const promiseBtn = document.getElementById("promiseBtn");
+      promiseBtn.addEventListener("click", () => {
+        output.textContent = "Promise started...\n";
+
+        const fetchPromise = new Promise((resolve, reject) => {
+          setTimeout(() => resolve("Promise Data"), 1000);
+        });
+
+        fetchPromise
+          .then((result) => (output.textContent += result))
+          .catch((err) => (output.textContent += "Error: " + err));
+      });
+
+      // ===== Async/Await Example =====
+      const asyncBtn = document.getElementById("asyncBtn");
+      asyncBtn.addEventListener("click", async () => {
+        output.textContent = "Async/Await started...\n";
+
+        const fetchAsync = () => {
+          return new Promise((resolve) => {
+            setTimeout(() => resolve("Async/Await Data"), 1000);
+          });
+        };
+
+        try {
+          const result = await fetchAsync();
+          output.textContent += result;
+        } catch (err) {
+          output.textContent += "Error: " + err;
+        }
+      });
+    </script>
+  </body>
+</html>
