@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jQuery Demo: DOM, Events & AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+      }
+      .container {
+        width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin: 5px 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: center;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+      #feedback {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>jQuery Demo</h2>
+
+      <input type="text" id="username" placeholder="Enter username" />
+      <button id="validateBtn">Validate Username</button>
+      <p id="feedback"></p>
+
+      <button id="loadBtn">Load Random User (AJAX)</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Username</th>
+          </tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+      </table>
+    </div>
+
+    <script>
+      $(document).ready(() => {
+        // ===== DOM Shortcuts & Event Handling =====
+        const $username = $("#username");
+        const $feedback = $("#feedback");
+        const $validateBtn = $("#validateBtn");
+        const $userTable = $("#userTable");
+        const $loadBtn = $("#loadBtn");
+
+        // Event: Validate username
+        $validateBtn.click(() => {
+          const name = $username.val().trim();
+          if (name === "") {
+            $feedback.text("Username cannot be empty").css("color", "red");
+          } else if (name.includes("@")) {
+            $feedback.text("Valid username").css("color", "green");
+          } else {
+            $feedback.text("Username must contain @").css("color", "orange");
+          }
+        });
+
+        // ===== AJAX Basics =====
+        $loadBtn.click(() => {
+          $.ajax({
+            url: "https://jsonplaceholder.typicode.com/users",
+            method: "GET",
+            success: (data) => {
+              // Pick a random user
+              const randomUser = data[Math.floor(Math.random() * data.length)];
+
+              // Append to table
+              $userTable.append(`
+          <tr>
+            <td>${randomUser.name}</td>
+            <td>${randomUser.email}</td>
+            <td>${randomUser.username}</td>
+          </tr>
+        `);
+            },
+            error: () => {
+              alert("Error fetching user data");
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
