@@ -15,7 +15,9 @@
 
       homeButton.addEventListener("click", function (event) {
         event.preventDefault();
+
         const username = localStorage.getItem("usr");
+
         welcomeMessage.textContent = username;
       });
     </script>
