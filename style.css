@@ -1,0 +1,32 @@
+body {
+  background: linear-gradient(to top, red, green);
+  background-repeat: no-repeat;
+  height: 800px;
+}
+#modal-form {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  height: 300px;
+  width: 400px;
+}
+
+#modal-form form {
+  display: flex;
+  flex-direction: column;
+  background-color: bisque;
+  padding: 5px 10px;
+}
+
+#modal-form form input {
+  height: 24px;
+  padding: 2px 4px;
+  margin-top: 5px;
+}
+
+#modal-form form button {
+  height: 24px;
+  padding: 2px 4px;
+  margin-top: 5px;
+}
