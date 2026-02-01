@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>User Manager Full</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin: 30px;
+      }
+      input {
+        padding: 5px;
+        margin: 5px;
+      }
+      button {
+        padding: 5px 10px;
+        margin: 5px;
+      }
+      table {
+        width: 60%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: center;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+      #feedback {
+        font-weight: bold;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ES6 User Manager with Validation & Age Filter</h2>
+
+    <div>
+      <input
+        type="text"
+        id="username"
+        placeholder="Username (must include @)"
+      />
+      <input type="email" id="email" placeholder="Email" />
+      <input type="number" id="age" placeholder="Age" />
+      <button id="addUser">Add User</button>
+      <p id="feedback"></p>
+    </div>
+
+    <div>
+      <input type="number" id="ageFilter" placeholder="Filter by minimum age" />
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Age</th>
+        </tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+
+    <script>
+      (() => {
+        // ===== Variables =====
+        const userTable = document.getElementById("userTable");
+        let users = [];
+
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+        const ageInput = document.getElementById("age");
+        const addUserBtn = document.getElementById("addUser");
+        const ageFilterInput = document.getElementById("ageFilter");
+        const feedback = document.getElementById("feedback");
+
+        // ===== Render Table =====
+        const renderTable = (minAge = 0) => {
+          userTable.innerHTML = "";
+          users
+            .filter(({ age }) => age >= minAge)
+            .forEach(({ username, email, age }) => {
+              userTable.innerHTML += `
+          <tr>
+            <td>${username}</td>
+            <td>${email}</td>
+            <td>${age}</td>
+          </tr>
+        `;
+            });
+        };
+
+        // ===== Username live validation =====
+        usernameInput.addEventListener("input", () => {
+          const value = usernameInput.value.trim();
+          if (value === "") {
+            feedback.textContent = "";
+          } else if (value.includes("@")) {
+            feedback.textContent = "Valid username";
+            feedback.style.color = "green";
+          } else {
+            feedback.textContent = "Username must include @";
+            feedback.style.color = "orange";
+          }
+        });
+
+        // ===== Add user =====
+        addUserBtn.addEventListener("click", () => {
+          const username = usernameInput.value.trim();
+          const email = emailInput.value.trim();
+          const age = parseInt(ageInput.value.trim());
+
+          if (!username || !email || !age) return alert("Fill all fields");
+          if (!username.includes("@")) return alert("Username must include @");
+
+          // Add user using spread operator
+          users = [...users, { username, email, age }];
+          //   users = [{ username, email, age }];
+
+          // Clear inputs
+          usernameInput.value = "";
+          emailInput.value = "";
+          ageInput.value = "";
+          feedback.textContent = "";
+
+          // Render filtered table
+          const minAge = parseInt(ageFilterInput.value) || 0;
+          renderTable(minAge);
+        });
+
+        // ===== Age filter =====
+        ageFilterInput.addEventListener("input", () => {
+          const minAge = parseInt(ageFilterInput.value) || 0;
+          renderTable(minAge);
+        });
+      })();
+    </script>
+  </body>
+</html>
