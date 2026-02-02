@@ -4,111 +4,202 @@
     <meta charset="UTF-8" />
     <title>jQuery Demo: DOM, Events & AJAX</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <style>
       body {
+        margin: 0;
         font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        margin-top: 50px;
+        background: #f4f6f8;
       }
+
+      header,
+      footer {
+        background: #2c3e50;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+      }
+
       .container {
-        width: 400px;
+        width: 900px;
+        margin: 30px auto;
+        background: #fff;
         padding: 20px;
-        border: 1px solid #ccc;
         border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 25px;
       }
+
+      .left,
+      .right {
+        width: 50%;
+      }
+
+      .right {
+        border-left: 1px solid #ddd;
+        padding-left: 25px;
+      }
+
       input,
       button {
-        padding: 8px;
-        margin: 5px 0;
         width: 100%;
+        padding: 8px;
+        margin: 6px 0;
         box-sizing: border-box;
       }
+
+      button {
+        background: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background: #2980b9;
+      }
+
+      h3 {
+        margin-top: 0;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
       }
+
       th,
       td {
         border: 1px solid #ccc;
-        padding: 6px;
+        padding: 8px;
         text-align: center;
       }
+
       th {
-        background-color: #f4f4f4;
+        background: #ecf0f1;
       }
-      #feedback {
-        margin-top: 10px;
-        font-weight: bold;
+
+      footer {
+        margin-top: 30px;
       }
     </style>
   </head>
+
   <body>
+    <!-- HEADER -->
+    <header>
+      <h1>jQuery DOM, Events & AJAX Demo</h1>
+    </header>
+
+    <!-- MAIN -->
     <div class="container">
-      <h2>jQuery Demo</h2>
+      <!-- LEFT: FORM -->
+      <div class="left">
+        <h3>Add User (Form)</h3>
+        <input type="text" id="name" placeholder="Enter name" />
+        <input type="email" id="email" placeholder="Enter email" />
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter username (@ required)"
+        />
+        <button id="addUserBtn">Add User</button>
+        <p id="formMsg"></p>
+      </div>
 
-      <input type="text" id="username" placeholder="Enter username" />
-      <button id="validateBtn">Validate Username</button>
-      <p id="feedback"></p>
+      <!-- RIGHT: TABLE + AJAX -->
+      <div class="right">
+        <button id="loadBtn">Load 1 More User (AJAX)</button>
 
-      <button id="loadBtn">Load Random User (AJAX)</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Username</th>
-          </tr>
-        </thead>
-        <tbody id="userTable"></tbody>
-      </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Username</th>
+            </tr>
+          </thead>
+          <tbody id="userTable"></tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© 2026 jQuery Learning Demo</p>
+    </footer>
 
     <script>
       $(document).ready(() => {
-        // ===== DOM Shortcuts & Event Handling =====
-        const $username = $("#username");
-        const $feedback = $("#feedback");
-        const $validateBtn = $("#validateBtn");
         const $userTable = $("#userTable");
-        const $loadBtn = $("#loadBtn");
+        let loadedCount = 0;
 
-        // Event: Validate username
-        $validateBtn.click(() => {
-          const name = $username.val().trim();
-          if (name === "") {
-            $feedback.text("Username cannot be empty").css("color", "red");
-          } else if (name.includes("@")) {
-            $feedback.text("Valid username").css("color", "green");
-          } else {
-            $feedback.text("Username must contain @").css("color", "orange");
-          }
-        });
-
-        // ===== AJAX Basics =====
-        $loadBtn.click(() => {
+        // ===== Load users from AJAX (1 at a time) =====
+        function loadUsers(count) {
           $.ajax({
             url: "https://jsonplaceholder.typicode.com/users",
             method: "GET",
             success: (data) => {
-              // Pick a random user
-              const randomUser = data[Math.floor(Math.random() * data.length)];
+              const users = data.slice(loadedCount, loadedCount + count);
 
-              // Append to table
-              $userTable.append(`
-          <tr>
-            <td>${randomUser.name}</td>
-            <td>${randomUser.email}</td>
-            <td>${randomUser.username}</td>
-          </tr>
-        `);
+              users.forEach((user) => {
+                $userTable.append(`
+                  <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.username}</td>
+                  </tr>
+                `);
+              });
+
+              loadedCount += count;
             },
             error: () => {
-              alert("Error fetching user data");
+              alert("Failed to load users");
             },
           });
+        }
+
+        // Load 5 users by default
+        loadUsers(5);
+
+        // Load 1 more user on click
+        $("#loadBtn").click(() => {
+          loadUsers(1);
+        });
+
+        // ===== Add user from form (1 at a time) =====
+        $("#addUserBtn").click(() => {
+          const name = $("#name").val().trim();
+          const email = $("#email").val().trim();
+          const username = $("#username").val().trim();
+
+          if (!name || !email || !username) {
+            $("#formMsg").text("All fields are required").css("color", "red");
+            return;
+          }
+
+          if (!username.includes("@")) {
+            $("#formMsg")
+              .text("Username must contain @")
+              .css("color", "orange");
+            return;
+          }
+
+          $userTable.prepend(`
+            <tr>
+              <td>${name}</td>
+              <td>${email}</td>
+              <td>${username}</td>
+            </tr>
+          `);
+
+          $("#formMsg").text("User added successfully").css("color", "green");
+
+          $("#name, #email, #username").val("");
         });
       });
     </script>
