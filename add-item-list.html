@@ -4,23 +4,106 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(
+          to bottom,
+          rgb(224, 19, 19),
+          rgb(192, 192, 63)
+        );
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      input {
+        padding: 8px;
+        width: 200px;
+      }
+
+      button {
+        padding: 8px 12px;
+        margin: 5px;
+        cursor: pointer;
+      }
+
+      ul {
+        margin-top: 15px;
+        padding: 0;
+        list-style: none;
+      }
+
+      li {
+        margin: 6px 0;
+        background: #f2f2f2;
+        padding: 6px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .remove-btn {
+        background: red;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+    </style>
   </head>
+
   <body>
-    <input type="text" id="itemInput" placeholder="Enter item" />
-    <button id="addBtn">Add</button>
-    <ul id="itemList"></ul>
+    <div class="container">
+      <h1 style="color: #fff">Create and Remove Element</h1>
+      <input type="text" id="itemInput" placeholder="Enter item" />
+      <br />
+      <button id="addBtn">Add</button>
+      <button id="clearBtn">Clear List</button>
+
+      <ul id="itemList"></ul>
+    </div>
+
     <script>
       const input = document.getElementById("itemInput");
       const addBtn = document.getElementById("addBtn");
+      const clearBtn = document.getElementById("clearBtn");
       const list = document.getElementById("itemList");
 
+      // Add item
       addBtn.addEventListener("click", () => {
         if (input.value.trim() !== "") {
           const li = document.createElement("li");
           li.textContent = input.value;
+          // console.log(li.innerText);
+
+          const removeBtn = document.createElement("button");
+          removeBtn.textContent = "Remove";
+          removeBtn.className = "remove-btn";
+
+          removeBtn.addEventListener("click", () => {
+            li.remove();
+          });
+
+          li.appendChild(removeBtn);
           list.appendChild(li);
+
           input.value = "";
         }
+      });
+
+      // Clear all items
+      clearBtn.addEventListener("click", () => {
+        list.innerHTML = "";
       });
     </script>
   </body>
