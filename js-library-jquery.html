@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>jQuery Demo: DOM, Events & AJAX</title>
+    <title>jQuery Demo</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
@@ -98,7 +98,7 @@
     <div class="container">
       <!-- LEFT: FORM -->
       <div class="left">
-        <h3>Add User (Form)</h3>
+        <h3>User Details</h3>
         <input type="text" id="name" placeholder="Enter name" />
         <input type="email" id="email" placeholder="Enter email" />
         <input
@@ -133,6 +133,7 @@
     </footer>
 
     <script>
+      // $(() => {})
       $(document).ready(() => {
         const $userTable = $("#userTable");
         let loadedCount = 0;
@@ -143,9 +144,12 @@
             url: "https://jsonplaceholder.typicode.com/users",
             method: "GET",
             success: (data) => {
+              // console.log(data, "users");
               const users = data.slice(loadedCount, loadedCount + count);
+              // console.log(users);
 
               users.forEach((user) => {
+                // console.log(user);
                 $userTable.append(`
                   <tr>
                     <td>${user.name}</td>
@@ -163,8 +167,8 @@
           });
         }
 
-        // Load 5 users by default
-        loadUsers(5);
+        // Load 4 users by default
+        loadUsers(4);
 
         // Load 1 more user on click
         $("#loadBtn").click(() => {
@@ -202,6 +206,23 @@
           $("#name, #email, #username").val("");
         });
       });
+
+      // AJAX POST METHOD
+      // $.ajax({
+      //   url: "https://jsonplaceholder.typicode.com/posts",
+      //   method: "POST",
+      //   data: {
+      //     title: "My Post",
+      //     body: "This is a post",
+      //     userId: 1,
+      //   },
+      //   success: function (response) {
+      //     console.log("Post created:", response);
+      //   },
+      //   error: function (err) {
+      //     console.error("Failed to create post:", err);
+      //   },
+      // });
     </script>
   </body>
 </html>
